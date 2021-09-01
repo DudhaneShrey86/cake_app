@@ -1,6 +1,7 @@
 <template>
   <div id="cake-details-page">
     <AppHeaderComponent :title="cake.name"></AppHeaderComponent>
+    <LoaderComponent ref="loader"></LoaderComponent>
     <div id="big-image-div" ref="bigImageDiv">
       
     </div>
@@ -25,12 +26,14 @@
 
 <script>
 import AppHeaderComponent from '@/components/AppHeaderComponent.vue'
+import LoaderComponent from '@/components/LoaderComponent.vue'
 
 export default {
   name: "CakeDetailsPages",
   props: ['_id'],
   components: {
     AppHeaderComponent,
+    LoaderComponent,
   },
   data(){
     return {
@@ -38,6 +41,7 @@ export default {
     }
   },
   mounted(){
+    this.$refs.loader.startLoading();
     // get cake details
     this.axios.get("/getcake/"+this._id)
     .then(res => {
@@ -46,6 +50,10 @@ export default {
         this.cake = res.data.data;
         this.$refs.bigImageDiv.style.backgroundImage = "url('/images/"+this.cake.image_link+"')";
       }
+      else{
+        this.$refs.loader.showError(res.data.data);
+      }
+      this.$refs.loader.stopLoading();
     })
   },
 }

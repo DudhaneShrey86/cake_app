@@ -6,6 +6,7 @@
     </form>
     <div class="container">
       <div id="search-results">
+        <LoaderComponent ref="loader"></LoaderComponent>
         <div v-if="!searched">
           <h5 class="muted">Search something to see results here</h5>
         </div>
@@ -22,10 +23,12 @@
 
 <script>
 import HorizontalCakeCardComponent from '@/components/HorizontalCakeCardComponent.vue'
+import LoaderComponent from '@/components/LoaderComponent.vue'
 export default {
   name: "Search",
   components: {
     HorizontalCakeCardComponent,
+    LoaderComponent,
   },
   data(){
     return {
@@ -42,6 +45,7 @@ export default {
       this.$refs.searchHeader.classList.remove('active');
     },
     searchCakes(){
+      this.$refs.loader.startLoading();
       this.searched = true;
       var v = this.$refs.search.value;
       this.axios.get("/getcakebysearch?search_string="+v)
@@ -52,7 +56,9 @@ export default {
         }
         else{
           console.log(res.data);
+          this.$refs.loader.showError(res.data.data);
         }
+        this.$refs.loader.stopLoading();
       })
     }
   }

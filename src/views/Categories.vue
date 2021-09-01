@@ -2,6 +2,7 @@
   <div id="categories-page">
     <AppHeaderComponent title="All Categories"></AppHeaderComponent>
     <div class="container">
+      <LoaderComponent ref="loader"></LoaderComponent>
       <div class="grid-container">
         <CategoryCardComponent v-for="category in categoriesArr" :key="category._id" :category="category"></CategoryCardComponent>
       </div>
@@ -12,19 +13,22 @@
 <script>
 import AppHeaderComponent from '@/components/AppHeaderComponent.vue'
 import CategoryCardComponent from '@/components/CategoryCardComponent.vue'
+import LoaderComponent from '@/components/LoaderComponent.vue'
 
 export default {
   name: "Categories",
   components: {
     AppHeaderComponent,
     CategoryCardComponent,
+    LoaderComponent,
   },
   data(){
     return {
       categoriesArr: [],
     }
   },
-  created(){
+  mounted(){
+    this.$refs.loader.startLoading();
     // get all categories
     this.axios.get("/getallcategories")
     .then(res => {
@@ -32,8 +36,9 @@ export default {
         this.categoriesArr = res.data.data
       }
       else{
-        console.log(res.data);
+        this.$refs.loader.showError(res.data.data);
       }
+      this.$refs.loader.stopLoading();
     })
   },
 }

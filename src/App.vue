@@ -23,7 +23,6 @@
 <style>
 :root{
   --yellow: #FFD371;
-  --dark-yellow: #e3aa2b;
   --red: #FF4848;
   --light-blue: #C2FFD9;
   --fade-blue: #678a9c;
